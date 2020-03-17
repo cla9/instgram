@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: member
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+    username: instagram
+    password: instagram
+    driverClassName: oracle.jdbc.OracleDriver
+  jpa:
+    hibernate:
+      ddl-auto: create
+  main:
+    allow-bean-definition-overriding: true
+
+axon:
+  serializer:
+    general: xstream
+  axonserver:
+    servers: localhost:8124
+
+
+logging.level.com.instagram : debug

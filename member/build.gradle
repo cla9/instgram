@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'  // querydsl plugin
+}
+
+ext{
+    axonVersion = "4.2.1"
+}
+repositories {
+    mavenCentral()
+    maven(){
+        url "http://maven.jahia.org/maven2"
+    }
+}
+
+dependencies{
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.oracle:ojdbc7:12.1.0.2'
+    implementation group: 'org.axonframework', name: 'axon-spring-boot-starter', version: "$axonVersion"
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor (
+            'org.projectlombok:lombok'
+    )
+    implementation "com.querydsl:querydsl-sql:4.2.2"
+    implementation "com.querydsl:querydsl-sql-spring:4.2.2"
+
+
+    implementation 'com.querydsl:querydsl-apt:4.2.2'
+    implementation 'com.querydsl:querydsl-jpa:4.2.2'
+}
+
+// querydsl 적용
+apply plugin: "com.ewerk.gradle.plugins.querydsl" // Plugin 적용
+def querydslSrcDir = 'src/main/generated' // QClass 생성 위치
+
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslSrcDir
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', querydslSrcDir]
+        }
+    }
+}
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+clean {
+    delete file(querydslSrcDir)
+}
+
+
+tasks.withType(JavaCompile){
+    options.encoding='UTF-8'
+}

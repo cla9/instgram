@@ -1,0 +1,11 @@
+POST http://localhost:8080/api/member/signup
+Content-Type: application/json
+
+{
+  "username" : "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "fullname" : "김은수",
+  "password" : "test",
+  "email" : "testtestcom"
+}
+
+###
