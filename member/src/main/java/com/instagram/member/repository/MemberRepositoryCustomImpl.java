@@ -1,5 +1,6 @@
 package com.instagram.member.repository;
 
+import static com.instagram.member.model.aggregate.QMember.member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -10,11 +11,9 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
 
     @Override
     public boolean existsByUserName(String name) {
-        long result = 0;
-
-//        long result = queryFactory.selectOne()
-//                                       .from(member)
-//                                      .where(member.name.userName.eq(name)).fetchCount();
+        long result = queryFactory.selectOne()
+                                       .from(member)
+                                      .where(member.name.userName.eq(name)).fetchCount();
         return result > 0;
     }
 }

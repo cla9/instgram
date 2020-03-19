@@ -13,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -23,24 +27,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MemberServiceImpl implements MemberService {
     private final CommandGateway commandGateway;
-    private final MemberRepository repository;
 
     @Override
     public SignUpResponseDTO signUpMember(SignUpRequestDTO requestDTO) {
         log.info("send signup command");
-        verifyMemberName(requestDTO.getName());
-        verifyEmail(requestDTO.getEmail());
         return sendSignUpCommand(requestDTO);
-    }
-
-    private void verifyMemberName(Name name){
-        boolean isExistsUserName = repository.existsByUserName(name.getUserName());
-        if(isExistsUserName) throw new UserNameDuplicationException("사용자 이름이 중복되었습니다." + name.getUserName());
-    }
-
-    private void verifyEmail(Email email){
-        boolean isExistsEmail = repository.existsByEmail(email);
-        if(isExistsEmail) throw new EmailDuplicationException("사용자 이메일이 중복되었습니다. " + email.getEmailAddress());
     }
 
     private SignUpResponseDTO sendSignUpCommand(SignUpRequestDTO requestDTO) {

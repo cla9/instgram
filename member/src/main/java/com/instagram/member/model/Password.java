@@ -15,8 +15,8 @@ import java.io.Serializable;
 @Getter
 public class Password implements Serializable {
     @Column(name = "password", length = 128)
-    @NotEmpty
-    @Length(min = 1, max = 128)
+    @NotEmpty(message = "{password.empty}")
+    @Length(min = 1, max = 128, message = "{password.length}")
     private String password;
     public static Password of(String password){
         return new Password(password);

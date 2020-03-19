@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.instagram.member.common.util.serializer.SignUpRequestDeserializer;
+import com.instagram.member.common.validation.annotation.UniqueEmail;
 import com.instagram.member.model.Email;
 import com.instagram.member.model.Name;
 import com.instagram.member.model.Password;

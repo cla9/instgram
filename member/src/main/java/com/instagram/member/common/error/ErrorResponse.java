@@ -34,8 +34,8 @@ public class ErrorResponse {
         this.errors = new ArrayList<>();
     }
 
-    public static ErrorResponse of(final ErrorCode code, final BindingResult bindingResult, final MessageSource messageSource, Locale locale) {
-        return new ErrorResponse(code, FieldError.of(bindingResult, messageSource, locale));
+    public static ErrorResponse of(final ErrorCode code, final BindingResult bindingResult, final MessageSource messageSource) {
+        return new ErrorResponse(code, FieldError.of(bindingResult, messageSource));
     }
 
     public static ErrorResponse of(final ErrorCode code) {
@@ -65,13 +65,13 @@ public class ErrorResponse {
             return fieldErrors;
         }
 
-        private static List<FieldError> of(final BindingResult bindingResult, MessageSource messageSource, Locale locale) {
+        private static List<FieldError> of(final BindingResult bindingResult, MessageSource messageSource) {
             final List<org.springframework.validation.FieldError> fieldErrors = bindingResult.getFieldErrors();
             return fieldErrors.stream()
                     .map(error -> new FieldError(
                             error.getField(),
                             error.getRejectedValue() == null ? "" : error.getRejectedValue().toString(),
-                            messageSource.getMessage(error, locale)))
+                            messageSource.getMessage(error, Locale.getDefault())))
                     .collect(Collectors.toList());
         }
     }

@@ -10,10 +10,16 @@ spring:
     password: instagram
     driverClassName: oracle.jdbc.OracleDriver
   jpa:
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
     hibernate:
       ddl-auto: create
+    database-platform: org.hibernate.dialect.Oracle10gDialect
   main:
     allow-bean-definition-overriding: true
+
 
 axon:
   serializer:

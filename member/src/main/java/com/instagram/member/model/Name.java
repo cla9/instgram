@@ -3,6 +3,7 @@ package com.instagram.member.model;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.instagram.member.common.validation.annotation.UniqueUserName;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
@@ -20,8 +21,12 @@ import java.io.Serializable;
 @Embeddable
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Name implements Serializable {
-    @NotEmpty @Length(min = 1, max = 30)
+    @NotEmpty(message = "{name.empty}")
+    @Length(min = 1, max = 30, message = "{name.length}")
+    @UniqueUserName(message = "{name.duplication}")
     private String userName;
-    @NotEmpty @Length(min = 1, max = 255)
+
+    @NotEmpty(message = "{fullname.empty}")
+    @Length(min = 1, max = 255, message = "{fullname.length}")
     private String fullName;
 }
