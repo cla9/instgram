@@ -4,6 +4,7 @@ import com.instagram.member.common.validation.annotation.UniqueEmail;
 import com.instagram.member.model.Email;
 import com.instagram.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;

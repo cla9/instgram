@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>[이메일 인증]</h1>
+    <p> 아래 링크를 클릭하면 이메일 인증이 완료됩니다.</p>
+    <a th:href="@{__${baseUrl}__/auth/mail(uid=${uid})}">
+        이메일 인증 확인
+    </a>
+</body>
+</html>

@@ -10,7 +10,7 @@ import java.util.EnumSet;
 
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class EnumValueConvertUtils {
+public class EnumValueConvertUtil {
     public static <T extends Enum<T> & CommonType> T ofCode(Class<T> enumClass, String code){
         if(StringUtils.isEmpty(code)) return null;
         return EnumSet.allOf(enumClass).stream()

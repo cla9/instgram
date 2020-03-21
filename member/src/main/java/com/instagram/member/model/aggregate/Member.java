@@ -55,9 +55,7 @@ public class Member {
     public Member(CreateMember command) {
         log.debug("handling {}", command);
         changePendingStatus();
-        //Todo Email 서버 연동 로직 구현 필요
         notifyMemberCreation(command);
-
 
     }
 

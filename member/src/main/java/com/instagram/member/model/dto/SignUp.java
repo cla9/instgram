@@ -33,4 +33,13 @@ public class SignUp {
     public static class SignUpResponseDTO {
         private String memberID;
     }
+
+    @Getter
+    @Builder
+    @ToString
+    public static class SignUpMailRequestDTO{
+        private String subject;
+        private String address;
+        private String content;
+    }
 }

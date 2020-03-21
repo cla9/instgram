@@ -5,21 +5,24 @@ import com.instagram.member.model.Name;
 import com.instagram.member.model.Password;
 import com.instagram.member.model.dto.SignUp.SignUpRequestDTO;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.Set;
 
-class SignUpRequestDTOTest {
-    private Validator validator;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @BeforeEach
-    public void setUp() {
-        this.validator = Validation.buildDefaultValidatorFactory().getValidator();
-    }
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+class SignUpRequestDTOTest {
+    @Autowired
+    private Validator validator;
 
     @Test
     void SignUpRequestDTOTest() {
@@ -34,11 +37,14 @@ class SignUpRequestDTOTest {
 
         Set<ConstraintViolation<SignUpRequestDTO>> constraintViolations = validator.validate(signUpRequestDTO);
 
-        Assertions.assertThat(constraintViolations)
+        assertThat(constraintViolations).isNotEmpty();
+        assertThat(constraintViolations)
                 .extracting(ConstraintViolation::getMessage)
                 .containsOnly(
-                        "반드시 최소값  1과(와) 최대값 30 사이의 길이이어야 합니다.",
-                        "이메일 주소가 유효하지 않습니다.");
+                        "활동명의 길이는 최소 1자 이상 최대 30자 이하입니다.",
+                        "올바르지 않은 이메일 형식입니다.");
 
     }
+
+
 }

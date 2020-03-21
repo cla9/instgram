@@ -2,47 +2,53 @@ package com.instagram.member.service;
 
 import com.common.command.CreateMember;
 import com.instagram.member.common.error.exception.CommandException;
-import com.instagram.member.common.error.exception.EmailDuplicationException;
-import com.instagram.member.common.error.exception.UserNameDuplicationException;
-import com.instagram.member.model.Email;
-import com.instagram.member.model.Name;
+import com.instagram.member.common.util.api.MailService;
 import com.instagram.member.model.dto.SignUp.SignUpRequestDTO;
 import com.instagram.member.model.dto.SignUp.SignUpResponseDTO;
-import com.instagram.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import static com.instagram.member.model.dto.SignUp.*;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class MemberServiceImpl implements MemberService {
     private final CommandGateway commandGateway;
+    private final SignUpMailContentBuilder mailContentBuilder;
+    private final MailService mailService;
 
     @Override
-    public SignUpResponseDTO signUpMember(SignUpRequestDTO requestDTO) {
+    public SignUpResponseDTO signUpMember(SignUpRequestDTO requestDTO, HttpServletRequest httpRequest) {
         log.info("send signup command");
-        return sendSignUpCommand(requestDTO);
+        SignUpResponseDTO result = sendSignUpCommand(requestDTO);
+        sendSignUpMail(requestDTO,httpRequest);
+        return result;
+    }
+
+    private void sendSignUpMail(SignUpRequestDTO requestDTO, HttpServletRequest httpRequest) {
+        String mailId = UUID.randomUUID().toString();
+        SignUpMailRequestDTO mailRequestDTO = SignUpMailRequestDTO.builder()
+                .subject("[instagram] 회원가입 이메일 인증")
+                .address(requestDTO.getEmail().getEmailAddress())
+                .content(mailContentBuilder.build(mailId, httpRequest)).build();
+        String result = mailService.sendMemberAuthMail(mailRequestDTO);
+        log.info("result {}", result);
     }
 
     private SignUpResponseDTO sendSignUpCommand(SignUpRequestDTO requestDTO) {
-        System.out.println(requestDTO);
-        Optional<String> result = sendSinUpCommandAndWaitFor10Sec(requestDTO);
-        return createSignUpResponseDTO(result);
-    }
+        String result = sendSinUpCommandAndWaitFor10Sec(requestDTO)
+                .orElseThrow(() -> new CommandException("SignUp Command Exception"));
 
-    private SignUpResponseDTO createSignUpResponseDTO(Optional<String> result) {
         return SignUpResponseDTO.builder()
-                .memberID(result.orElseThrow(() -> new CommandException("SignUp Command Exception")))
+                .memberID(result)
                 .build();
     }
 
